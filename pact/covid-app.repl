@@ -1,0 +1,157 @@
+;; ===============
+;; Setup
+;; ===============
+(begin-tx)
+(load ".coin.pact")
+
+; Create r coin contract account
+(env-data { 'ks: ["adminKey"] })
+(coin.create-account "covid-app-admin" (read-keyset "ks"))
+
+(env-keys ["adminKey"])
+(load "covid-app.pact")
+
+
+; (env-keys ["adminKey"])
+; (create-table users)
+(commit-tx)
+
+;; ===============
+;; TEST: registering a user
+;; ===============
+
+(begin-tx)
+(use user.covid-app)
+
+(env-data { 'ks: ["user-one"] })
+(expect
+  "anyone can start an account"
+  "User test-hash is registered in covid-app contract"
+  (register-user "test-hash" "21-30" "male" "IT" "11249"))
+
+(commit-tx)
+
+
+;; ===============
+;; TEST: uploading a self-certification
+;; ===============
+(begin-tx)
+(use user.covid-app)
+
+(expect-failure
+  "must sign with right keys"
+  "Keyset failure"
+  (self-certify "test-hash" {
+    "cough": false,
+    "fever": false,
+    "breath-shortness": false,
+    "chills": false,
+    "muscle-pain": false,
+    "fatigue": false,
+    "headache": false,
+    "sore-throat": false,
+    "loss-taste-smell": false,
+    "comment": "hello",
+    "date": (time "2050-07-22T12:00:00Z")
+}))
+
+;;also pre-env-keys next test
+(expect-failure
+  "must sign with right keys"
+  "Keyset failure"
+  (upload-test "test-hash" {
+    "img-hash": "aalkasd92i2u1234bsand__asss",
+    "comment": "hello",
+    "date": (time "2050-07-22T12:00:00Z")
+}))
+
+(env-keys ["user-one"])
+(expect
+  "upload self-certification with right keys"
+  "User test-hash uploaded a self-certification"
+  (self-certify "test-hash" {
+    "cough": false,
+    "fever": false,
+    "breath-shortness": false,
+    "chills": false,
+    "muscle-pain": false,
+    "fatigue": false,
+    "headache": false,
+    "sore-throat": false,
+    "loss-taste-smell": false,
+    "comment": "hello",
+    "date": (time "2050-07-22T12:00:00Z")
+}))
+
+(expect-failure
+  "not registered user"
+  "row not found: test-hash-two"
+  (self-certify "test-hash-two" {
+    "cough": false,
+    "fever": false,
+    "breath-shortness": false,
+    "chills": false,
+    "muscle-pain": false,
+    "fatigue": false,
+    "headache": false,
+    "sore-throat": false,
+    "loss-taste-smell": false,
+    "comment": "hello",
+    "date": (time "2050-07-22T12:00:00Z")
+}))
+
+(expect-failure
+  "wrong object format"
+  "cert-obj: Failure: Missing fields for {self-certification}: [cough:bool]"
+  (self-certify "test-hash-two" {
+    "fever": false,
+    "breath-shortness": false,
+    "chills": false,
+    "muscle-pain": false,
+    "fatigue": false,
+    "headache": false,
+    "sore-throat": false,
+    "loss-taste-smell": false,
+    "comment": "hello",
+    "date": (time "2050-07-22T12:00:00Z")
+}))
+
+(commit-tx)
+
+
+;; ===============
+;; TEST: upload a test image hash
+;; ===============
+(begin-tx)
+(use user.covid-app)
+
+
+(expect
+  "upload self-certification with right keys"
+  "User test-hash uploaded a test result image"
+  (upload-test "test-hash" {
+    "img-hash": "aalkasd92i2u1234bsand__asss",
+    "comment": "hello",
+    "date": (time "2050-07-22T12:00:00Z")
+}))
+
+(expect-failure
+  "not registered user"
+  "row not found: test-hash-two"
+  (upload-test "test-hash-two" {
+    "img-hash": "aalkasd92i2u1234bsand__asss",
+    "comment": "hello",
+    "date": (time "2050-07-22T12:00:00Z")
+}))
+
+(expect-failure
+  "wrong object format"
+  "Invalid field"
+  (upload-test "test-hash" {
+    "random": "value",
+    "img-hash": "aalkasd92i2u1234bsand__asss",
+    "comment": "hello",
+    "date": (time "2050-07-22T12:00:00Z")
+}))
+
+(commit-tx)
