@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
   ScrollView,
   Dimensions,
   StatusBar,
+  AsyncStorage
 } from 'react-native';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button, Header, Icon } from 'react-native-elements';
@@ -24,6 +25,13 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const Main = () => {
 
   const pactContext = useContext(PactContext);
+
+  useEffect(() => {
+    // AsyncStorage.clear();
+    (async () => {
+      pactContext.getSavedScans()
+    })();
+  }, []);
 
   const [drawerOpen, setDrawerOpen] = useState(false)
 

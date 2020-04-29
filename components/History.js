@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Text, View, StyleSheet, Button, FlatList } from 'react-native';
+import { Text, View, StyleSheet, FlatList } from 'react-native';
+import { Card, Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import PactContext from '../contexts/PactContext'
 
 const History = () => {
@@ -9,32 +11,40 @@ const History = () => {
   return (
     <View style={styles.container}>
         <FlatList
-          data={[
-            { key: 'Devin' },
-            { key: 'Dan' },
-            { key: 'Dominic' },
-            { key: 'Jackson' },
-            { key: 'James' },
-            { key: 'Joel' },
-            { key: 'John' },
-            { key: 'Jillian' },
-            { key: 'Jimmy' },
-            { key: 'Julie' },
-          ]}
-          renderItem={({ item }) =>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'stretch',
-              }}>
-              <Text>{item.key}</Text>
-                <Text>{item.key}</Text>
-                  <Text>{item.key}</Text>
-                    <Text>{item.key}</Text>
-                      <Text>{item.key}</Text>
-            </View>
+          data={pactContext.scans}
+          renderItem={({ item, i }) =>
+            <Card containerStyle={{backgroundColor: 'green'}}>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                    }}>
+                    <Text>maunfacturer</Text>
+                      <Text>model</Text>
+                  </View>
+                  <Text>{Date.now()}</Text>
+                  <Text style={{paddingRight: 10}}>{"item.chainId"}</Text>
+              </View>
+            </Card>
           }
+        />
+        <Button
+          style={{paddingTop: 20}}
+          icon={
+            <Icon
+              name="refresh"
+              size={15}
+              color="white"
+              style={{padding: 10}}
+            />
+          }
+          title="Refresh"
         />
       </View>
   );
@@ -44,7 +54,8 @@ const History = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22,
+    paddingTop: 5,
+    padding: 10
   },
   item: {
     padding: 10,

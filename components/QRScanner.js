@@ -20,7 +20,7 @@ const QRScanner = () => {
     const handleBarCodeScanned = ({ type, data }) => {
       setScanned(true);
       alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-      //handle this in PactContext
+      pactContext.handleQRScan(JSON.parse(data));
     };
 
     if (hasPermission === null) {
