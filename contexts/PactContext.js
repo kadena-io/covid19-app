@@ -3,7 +3,8 @@ import { AsyncStorage } from 'react-native';
 // import Pact from '../pact/pact-api/pla.js';
 // import Pact from '../pact/pact-api/pact-lang-api.js';
 // import { Pact } from '../pact/pact-api/pact-lang-api-global.min.js';
-var pact = require('../pact/pact-api/pact-lang-api-global.min.js')
+// var pact = require('../pact/pact-api/pact-lang-api-global.min.js')
+var pact = require('../node_modules/pact-lang-api/pact-lang-api-global.min.js')
 
 // import Pact from 'pact-lang-api'
 
@@ -14,6 +15,13 @@ const createAPIHost = (network, chainId) => `https://${network}.testnet.chainweb
 
 
 export class PactStore extends React.Component {
+
+
+  state = {
+    screen: 'home',
+    drawerOpen: false,
+    scans: [],
+  }
 
   getSavedScans = async () => {
     let scans = await AsyncStorage.getItem('scans');
@@ -27,12 +35,6 @@ export class PactStore extends React.Component {
     await this.setState({ scans: scans })
   }
 
-
-  state = {
-    screen: 'home',
-    drawerOpen: false,
-    scans: [],
-  }
 
   setScreen = async (name) => {
     await this.setDrawerOpen(false);
@@ -97,8 +99,6 @@ export class PactStore extends React.Component {
       key: Math.floor(Math.random() *  100000000000),
       reqKey: reqKey,
     }
-    // newScan["key"] =
-    // pastScans.push(newScan)
     pastScans.push(newScan);
     await this.setState({ scans: pastScans })
     await AsyncStorage.setItem('scans', JSON.stringify(pastScans))
