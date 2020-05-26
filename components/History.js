@@ -13,7 +13,7 @@ const History = () => {
         <FlatList
           data={pactContext.scans}
           renderItem={({ item, i }) =>
-            <Card containerStyle={{backgroundColor: 'green'}}>
+            <Card containerStyle={{backgroundColor: (item.test["test-end-bh"]["int"] === 0 ? 'grey' : 'green')}}>
               <View
                 style={{
                   flex: 1,
@@ -25,15 +25,30 @@ const History = () => {
                       flexDirection: 'column',
                       justifyContent: 'center',
                     }}>
-                    <Text>maunfacturer</Text>
-                      <Text>model</Text>
+                    <Text>{item.test["test-manufacturer"]}</Text>
+                      <Text>{item.test["test-model"]}</Text>
                   </View>
-                  <Text
-                    style={{color:"blue"}}
-                    onPress={() => Linking.openURL(item.url)}>
-                    link
-                  </Text>
-                  <Text style={{paddingRight: 10}}>{item.chainId}</Text>
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                    }}>
+                    <Text>{Date.parse(item.test["last-mod-time"]["timep"])}</Text>
+                    <Text
+                      style={{color:"blue"}}
+                      onPress={() => Linking.openURL(item.url)}>
+                      block explorer
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                    }}>
+                    <Text>status:</Text>
+                    <Text style={{paddingRight: 10}}>{(item.test["test-end-bh"]["int"] === 0 ? 'administered' : item.test["result"])}</Text>
+                  </View>
+
               </View>
             </Card>
           }

@@ -98,6 +98,7 @@ export class PactStore extends React.Component {
       pubKey: qrData["pubKey"],
       key: Math.floor(Math.random() *  100000000000),
       reqKey: reqKey,
+      test: test
     }
     pastScans.push(newScan);
     await this.setState({ scans: pastScans })
