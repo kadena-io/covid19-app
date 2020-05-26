@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Text, View, StyleSheet, FlatList } from 'react-native';
+import { Text, View, StyleSheet, FlatList, Linking } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PactContext from '../contexts/PactContext'
@@ -28,8 +28,12 @@ const History = () => {
                     <Text>maunfacturer</Text>
                       <Text>model</Text>
                   </View>
-                  <Text>{Date.now()}</Text>
-                  <Text style={{paddingRight: 10}}>{"item.chainId"}</Text>
+                  <Text
+                    style={{color:"blue"}}
+                    onPress={() => Linking.openURL(item.url)}>
+                    link
+                  </Text>
+                  <Text style={{paddingRight: 10}}>{item.chainId}</Text>
               </View>
             </Card>
           }

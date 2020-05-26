@@ -17,10 +17,18 @@ const QRScanner = () => {
       })();
     }, []);
 
-    const handleBarCodeScanned = ({ type, data }) => {
+    const handleBarCodeScanned = async ({ type, data }) => {
       setScanned(true);
-      alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-      pactContext.handleQRScan(JSON.parse(data));
+      // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+      const parsed = JSON.parse(data)
+      const keys = Object.keys(parsed)
+      if (keys.length === 3 && keys.includes("chainId") && keys.includes("url") && keys.includes("pubKey")) {
+        await pactContext.handleQRScan(parsed);
+      }
+      else {
+        alert('Invalid QR Code scanned. Please only scan QR codes from adhering partners')
+        setScanned(false)
+      }
     };
 
     if (hasPermission === null) {
