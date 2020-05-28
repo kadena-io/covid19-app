@@ -18,6 +18,7 @@ import DrawerContent from './DrawerContent';
 import Placeholder from './Placeholder';
 import QRScanner from './QRScanner';
 import History from './History';
+import Certify from './Certify';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -44,6 +45,9 @@ const Main = () => {
     }
     if (pactContext.screen === 'history') {
       return <History />
+    }
+    if (pactContext.screen === 'certify') {
+      return <Certify />
     }
   }
 

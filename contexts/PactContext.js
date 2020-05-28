@@ -1,9 +1,7 @@
 import React from 'react';
 import { AsyncStorage } from 'react-native';
-// import Pact from '../pact/pact-api/pla.js';
-// import Pact from '../pact/pact-api/pact-lang-api.js';
-// import { Pact } from '../pact/pact-api/pact-lang-api-global.min.js';
-// var pact = require('../pact/pact-api/pact-lang-api-global.min.js')
+import * as SecureStore from 'expo-secure-store';
+import * as LocalAuthentication from 'expo-local-authentication';
 var pact = require('../node_modules/pact-lang-api/pact-lang-api-global.min.js')
 
 // import Pact from 'pact-lang-api'
@@ -21,6 +19,7 @@ export class PactStore extends React.Component {
     screen: 'home',
     drawerOpen: false,
     scans: [],
+    loading: false
   }
 
   getSavedScans = async () => {
@@ -105,6 +104,47 @@ export class PactStore extends React.Component {
     await AsyncStorage.setItem('scans', JSON.stringify(pastScans))
   }
 
+  //refresh status of scans
+  updateScans = async () => {
+    const pastScans = this.state.scans.slice()
+    for (let i = 0; i < pastScans.length; i++) {
+      if (pastScans[i]['test']['result'] !== "") {
+        updatedTests.push(pastScans[i])
+      } else {
+        const updatedTest = await this.getTest(pastScans[i].pubKey, pastScans[i].chainId)
+        pastScans[i].test = updatedTest
+      }
+    }
+    await this.setState({ scans: pastScans })
+    await AsyncStorage.setItem('scans', JSON.stringify(pastScans))
+  }
+
+  authUser = async () => {
+    const auth = await LocalAuthentication.authenticateAsync();
+    if (auth.success === true) {
+      return true;
+    } else {
+      alert("authentification unsuccessfull");
+      return false;
+    }
+  }
+
+  genSaveKeypair = async () => {
+    const authSuccess = await this.authUser();
+    if (authSuccess) {
+      const kp = Pact.crypto.genKeyPair();
+      await SecureStore.setItemAsync('keypair', JSON.stringify(kp));
+    }
+  }
+
+  selfCertify = async () => {
+    const authSuccess = await this.authUser();
+    if (authSuccess) {
+      const kpStr = await SecureStore.getItemAsync('keypair');
+      const kp = JSON.parse(kpStr);
+    }
+  }
+
   render() {
     return (
       <Context.Provider
@@ -113,7 +153,9 @@ export class PactStore extends React.Component {
           setScreen: this.setScreen,
           setDrawerOpen: this.setDrawerOpen,
           handleQRScan: this.handleQRScan,
-          getSavedScans: this.getSavedScans
+          getSavedScans: this.getSavedScans,
+          updateScans: this.updateScans,
+          genSaveKeypair: this.genSaveKeypair
         }}
       >
         {this.props.children}

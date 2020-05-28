@@ -8,12 +8,19 @@ const History = () => {
 
   const pactContext = useContext(PactContext);
 
+  const showDate = (item) => {
+    const unix = Date.parse(item.test["last-mod-time"]["timep"])
+    const d = new Date(unix)
+    return `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}`
+  }
+
   return (
     <View style={styles.container}>
+        {(pactContext.scans.length !== 0 ?
         <FlatList
           data={pactContext.scans}
           renderItem={({ item, i }) =>
-            <Card containerStyle={{backgroundColor: (item.test["test-end-bh"]["int"] === 0 ? 'grey' : 'green')}}>
+            <Card containerStyle={{backgroundColor: (item.test["test-end-bh"]["int"] === 0 ? 'grey' : (item.test["result"] === 'positive' ? 'green' : 'red'))}}>
               <View
                 style={{
                   flex: 1,
@@ -33,7 +40,7 @@ const History = () => {
                       flexDirection: 'column',
                       justifyContent: 'center',
                     }}>
-                    <Text>{Date.parse(item.test["last-mod-time"]["timep"])}</Text>
+                    <Text>{showDate(item)}</Text>
                     <Text
                       style={{color:"blue"}}
                       onPress={() => Linking.openURL(item.url)}>
@@ -53,6 +60,10 @@ const History = () => {
             </Card>
           }
         />
+        :
+        <View>
+          <Text>No Tests Scanned!</Text>
+        </View>)}
         <Button
           style={{paddingTop: 20}}
           icon={
@@ -63,6 +74,7 @@ const History = () => {
               style={{padding: 10}}
             />
           }
+          onPress={() => pactContext.updateScans()}
           title="Refresh"
         />
       </View>
