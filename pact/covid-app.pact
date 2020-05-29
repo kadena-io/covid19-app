@@ -111,6 +111,8 @@
     )
   )
 
+  ;write function to get the tests
+
 )
 
 (create-table users)

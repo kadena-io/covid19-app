@@ -28,7 +28,7 @@ const DrawerContent = () => {
         onPress={() => pactContext.setScreen('scan')}
         style={styles.item}
       >
-        Scan QR Code
+        Scan Test QR
       </Text>
 
       <Text
@@ -43,6 +43,13 @@ const DrawerContent = () => {
         style={styles.item}
       >
         History
+      </Text>
+
+      <Text
+        onPress={() => pactContext.setScreen('security')}
+        style={styles.item}
+      >
+        Security
       </Text>
     </ScrollView>
   )

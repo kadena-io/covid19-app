@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, FlatList, Linking } from 'react-native';
-import { Card, Button } from 'react-native-elements';
+import { Card, Button, ButtonGroup } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PactContext from '../contexts/PactContext'
 
 const History = () => {
 
   const pactContext = useContext(PactContext);
+
+  const [index, setIndex] = useState(0);
 
   const showDate = (item) => {
     const unix = Date.parse(item.test["last-mod-time"]["timep"])
@@ -16,6 +18,12 @@ const History = () => {
 
   return (
     <View style={styles.container}>
+      <ButtonGroup
+        onPress={index => setIndex(index)}
+        selectedIndex={index}
+        buttons={['Tests', 'Self-Certifications']}
+        containerStyle={{height: 60}}
+      />
         {(pactContext.scans.length !== 0 ?
         <FlatList
           data={pactContext.scans}

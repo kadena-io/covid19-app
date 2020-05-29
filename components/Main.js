@@ -19,6 +19,8 @@ import Placeholder from './Placeholder';
 import QRScanner from './QRScanner';
 import History from './History';
 import Certify from './Certify';
+import PendingTx from './PendingTx';
+import Security from './Security';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -31,6 +33,9 @@ const Main = () => {
     // AsyncStorage.clear();
     (async () => {
       pactContext.getSavedScans()
+    })();
+    (async () => {
+      pactContext.getPubKey()
     })();
   }, []);
 
@@ -48,6 +53,12 @@ const Main = () => {
     }
     if (pactContext.screen === 'certify') {
       return <Certify />
+    }
+    if (pactContext.screen === 'pending') {
+      return <PendingTx />
+    }
+    if (pactContext.screen === 'security') {
+      return <Security />
     }
   }
 

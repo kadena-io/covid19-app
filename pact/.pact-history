@@ -1,5 +1,6 @@
 (load "covid-app.repl" true)
 (load "covid-app.repl" true)
+(load "covid-app.repl" true)
 (load covid-app.repl true)
 (load "covid-app.repl" true)
 (load "covid-app.repl" true)
